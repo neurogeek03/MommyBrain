@@ -5,26 +5,26 @@ INPUT_DIR="/home/mfafouti/scratch/Mommybrain_marlen/Curio/Data_niagara_new"  # R
 OUTPUT_DIR="/home/mfafouti/scratch/Mommybrain_marlen/Curio/new_fastqs_merged"
 mkdir -p $OUTPUT_DIR
 
-# # Function to gzip .ora files if they exist
-# gzip_ora_file() {
-#     local sample=$1
-#     local read=$2
-#     local pattern="${INPUT_DIR}/${sample}_lib_S*_L00*_${read}_001.fastq.ora"
+# Function to gzip .ora files if they exist
+gzip_ora_file() {
+    local sample=$1
+    local read=$2
+    local pattern="${INPUT_DIR}/${sample}_lib_S*_L00*_${read}_001.fastq.ora"
     
-#     # Check if .ora files exist
-#     if ls $pattern 1> /dev/null 2>&1; then
-#         echo "Found .ora files for ${sample} ${read}, compressing them..."
-#         # Gzip the .ora files
-#         local gz_output="${OUTPUT_DIR}/${sample}_merged_${read}.fastq.ora.gz"
-#         gzip -c $pattern > $gz_output
+    # Check if .ora files exist
+    if ls $pattern 1> /dev/null 2>&1; then
+        echo "Found .ora files for ${sample} ${read}, compressing them..."
+        # Gzip the .ora files
+        local gz_output="${OUTPUT_DIR}/${sample}_merged_${read}.fastq.ora.gz"
+        gzip -c $pattern > $gz_output
         
-#         # Verify compression
-#         total_size=$(stat -c %s $gz_output)
-#         echo "Created compressed file ${gz_output} (${total_size} bytes)"
-#     else
-#         echo "No .ora files found for ${sample} ${read}, skipping compression."
-#     fi
-# }
+        # Verify compression
+        total_size=$(stat -c %s $gz_output)
+        echo "Created compressed file ${gz_output} (${total_size} bytes)"
+    else
+        echo "No .ora files found for ${sample} ${read}, skipping compression."
+    fi
+}
 
 # Function to merge .fastq.gz files
 merge_fastqs() {
@@ -52,9 +52,9 @@ merge_fastqs() {
 for sample in B2 B3 B11 B14 B23 B33 B37 B42 B47 B48; do
     echo "Processing sample ${sample}..."
     
-    # # Check and compress .ora files first
-    # gzip_ora_file $sample "R1"
-    # gzip_ora_file $sample "R2"
+    # Check and compress .ora files first
+    gzip_ora_file $sample "R1"
+    gzip_ora_file $sample "R2"
     
     # Merge .fastq.gz files
     merge_fastqs $sample "R1"
